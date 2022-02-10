@@ -209,6 +209,15 @@ STATIC mp_obj_t madc_read_uv(mp_obj_t self_in) {
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(madc_read_uv_obj, madc_read_uv);
 
+STATIC mp_obj_t madc_output_vref(mp_obj_t self_in) {
+    const madc_obj_t *self = MP_OBJ_TO_PTR(self_in);
+    if (adc_vref_to_gpio(self->block->unit_id, self->gpio_id) != ESP_OK) {
+        mp_raise_TypeError(MP_ERROR_TEXT("Pin not supported"));
+    }
+    return mp_const_none;
+}
+STATIC MP_DEFINE_CONST_FUN_OBJ_1(madc_output_vref_obj, madc_output_vref);
+
 STATIC mp_obj_t madc_atten(mp_obj_t self_in, mp_obj_t atten_in) {
     const madc_obj_t *self = MP_OBJ_TO_PTR(self_in);
     mp_int_t atten = mp_obj_get_int(atten_in);
@@ -231,6 +240,7 @@ STATIC const mp_rom_map_elem_t madc_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_read), MP_ROM_PTR(&madc_read_obj) },
     { MP_ROM_QSTR(MP_QSTR_read_u16), MP_ROM_PTR(&madc_read_u16_obj) },
     { MP_ROM_QSTR(MP_QSTR_read_uv), MP_ROM_PTR(&madc_read_uv_obj) },
+    { MP_ROM_QSTR(MP_QSTR_output_vref), MP_ROM_PTR(&madc_output_vref_obj) },
 
     // Legacy API methods:
     { MP_ROM_QSTR(MP_QSTR_atten), MP_ROM_PTR(&madc_atten_obj) },
